@@ -1,0 +1,39 @@
+meta {
+  name: Usuário logado
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/auth/user
+  body: none
+  auth: none
+}
+
+headers {
+  Cookie: ses={{ses}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq {{usuarioId}}
+}
+
+tests {
+  test("não expõe o hash da senha", function () {
+    expect(res.getBody()).to.not.have.property("password_hash");
+  });
+}
+
+docs {
+  # GET /auth/user
+
+  Retorna `id`, `email` e `nome` do usuário da sessão.
+
+  As sessões ficam em memória: se o servidor reiniciar, rode o Login de novo.
+
+  **Respostas**
+
+  - `200` usuário da sessão
+  - `400` sem cookie `ses` ou sessão desconhecida
+}

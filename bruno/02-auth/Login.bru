@@ -1,0 +1,55 @@
+meta {
+  name: Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{email}}",
+    "password": "{{senha}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body: eq true
+}
+
+script:post-response {
+  let cookies = res.getHeader("set-cookie") || [];
+  if (!Array.isArray(cookies)) cookies = [cookies];
+  const ses = cookies.map(c => c.match(/ses=([^;]+)/)).find(Boolean);
+  if (ses) bru.setVar("ses", ses[1]);
+}
+
+tests {
+  test("define o cookie ses", function () {
+    expect(bru.getVar("ses")).to.be.a("string");
+  });
+}
+
+docs {
+  # POST /auth/login
+
+  Confere e-mail e senha e cria a sessão. O id da sessão volta no cookie `ses`, que este request guarda na variável `ses`.
+
+  **Corpo**
+
+  | Campo | Tipo |
+  |---|---|
+  | `email` | string |
+  | `password` | string |
+
+  **Respostas**
+
+  - `200` `true` e cookie `ses`
+  - `401` senha inválida
+  - `404` usuário não encontrado
+}

@@ -1,0 +1,38 @@
+meta {
+  name: Login com e-mail inexistente
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "ninguem@teste.com",
+    "password": "{{senha}}"
+  }
+}
+
+assert {
+  res.status: eq 404
+}
+
+tests {
+  test("responde usuário não encontrado", function () {
+    expect(res.getBody().msg).to.equal("usuário não encontrado");
+  });
+}
+
+docs {
+  # POST /auth/login (e-mail inexistente)
+
+  Teste negativo: nenhum usuário com esse e-mail.
+
+  **Respostas**
+
+  - `404` `{ "msg": "usuário não encontrado" }`
+}

@@ -1,0 +1,39 @@
+meta {
+  name: Atualizar categoria
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/categoria/{{categoriaId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Mercado"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.changes: eq 1
+}
+
+tests {
+  test("altera uma linha", function () {
+    expect(res.getBody().changes).to.equal(1);
+  });
+}
+
+docs {
+  # PUT /categoria/:id
+
+  Atualiza todas os campos. Exige o objeto completo.
+
+  **Respostas**
+
+  - `200` `{ changes, lastInsertRowid }`
+  - `400` corpo ou id inválido
+}

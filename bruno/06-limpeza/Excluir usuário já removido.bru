@@ -1,0 +1,31 @@
+meta {
+  name: Excluir usuário já removido
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/usuario/{{usuarioId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+tests {
+  test("responde 404 para id inexistente", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+}
+
+docs {
+  # DELETE /usuario/:id (inexistente)
+
+  Teste negativo: o usuário já foi excluído no passo anterior.
+
+  **Respostas**
+
+  - `404` `"Not found"`
+}

@@ -1,0 +1,40 @@
+meta {
+  name: Criar usuário inválido
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/usuario
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Sem e-mail",
+    "idade": "vinte",
+    "email": "isso-nao-e-email",
+    "password": "123"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("rejeita corpo inválido com 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
+
+docs {
+  # POST /usuario (inválido)
+
+  Teste negativo: `idade` não é número e `email` não é e-mail. O middleware `ffInputType` barra antes do controller.
+
+  **Respostas**
+
+  - `400` resumo dos erros do ArkType
+}

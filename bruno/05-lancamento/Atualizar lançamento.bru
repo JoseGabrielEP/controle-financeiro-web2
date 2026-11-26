@@ -1,0 +1,44 @@
+meta {
+  name: Atualizar lançamento
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/lancamento/{{lancamentoId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "conta_id": {{contaId}},
+    "categoria_id": {{categoriaId}},
+    "descricao": "Salário",
+    "valor": 2500,
+    "tipo": "entrada",
+    "data": "2026-11-30"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.changes: eq 1
+}
+
+tests {
+  test("altera uma linha", function () {
+    expect(res.getBody().changes).to.equal(1);
+  });
+}
+
+docs {
+  # PUT /lancamento/:id
+
+  Atualiza todos os campos. Exige o objeto completo.
+
+  **Respostas**
+
+  - `200` `{ changes, lastInsertRowid }`
+  - `400` corpo ou id inválido
+}

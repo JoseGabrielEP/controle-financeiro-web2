@@ -1,0 +1,61 @@
+meta {
+  name: Criar usuário
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/usuario
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Usuário Bruno",
+    "idade": 21,
+    "email": "{{email}}",
+    "password": "{{senha}}"
+  }
+}
+
+script:pre-request {
+  bru.setVar("email", `bruno-${Date.now()}@teste.com`);
+}
+
+assert {
+  res.status: eq 200
+  res.body.changes: eq 1
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setVar("usuarioId", res.getBody().lastInsertRowid);
+  }
+}
+
+tests {
+  test("devolve o id criado", function () {
+    expect(res.getBody().lastInsertRowid).to.be.a("number");
+  });
+}
+
+docs {
+  # POST /usuario
+
+  Cria um usuário. A senha é guardada com `Bun.password.hash`. O e-mail é gerado a cada execução para não bater no `UNIQUE`.
+
+  **Corpo** (todos obrigatórios)
+
+  | Campo | Tipo |
+  |---|---|
+  | `nome` | string |
+  | `idade` | number |
+  | `email` | string.email (único) |
+  | `password` | string |
+
+  **Respostas**
+
+  - `200` `{ changes, lastInsertRowid }`
+  - `400` corpo inválido (resumo do ArkType)
+}

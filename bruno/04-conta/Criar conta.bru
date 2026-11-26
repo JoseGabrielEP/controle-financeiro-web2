@@ -1,0 +1,55 @@
+meta {
+  name: Criar conta
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/conta
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuario_id": {{usuarioId}},
+    "nome": "Carteira",
+    "saldo_inicial": 150
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.changes: eq 1
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setVar("contaId", res.getBody().lastInsertRowid);
+  }
+}
+
+tests {
+  test("devolve o id criado", function () {
+    expect(res.getBody().lastInsertRowid).to.be.a("number");
+  });
+}
+
+docs {
+  # POST /conta
+
+  Cria uma conta ligada ao usuário criado na pasta 01.
+
+  **Corpo** (todos obrigatórios)
+
+  | Campo | Tipo |
+  |---|---|
+  | `usuario_id` | number |
+  | `nome` | string |
+  | `saldo_inicial` | number |
+
+  **Respostas**
+
+  - `200` `{ changes, lastInsertRowid }`
+  - `400` corpo inválido (resumo do ArkType)
+}

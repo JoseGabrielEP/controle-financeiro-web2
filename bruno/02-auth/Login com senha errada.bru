@@ -1,0 +1,38 @@
+meta {
+  name: Login com senha errada
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{email}}",
+    "password": "senha-errada"
+  }
+}
+
+assert {
+  res.status: eq 401
+}
+
+tests {
+  test("responde senha inválida", function () {
+    expect(res.getBody().msg).to.equal("senha inválida");
+  });
+}
+
+docs {
+  # POST /auth/login (senha errada)
+
+  Teste negativo: o e-mail existe, a senha não confere.
+
+  **Respostas**
+
+  - `401` `{ "msg": "senha inválida" }`
+}

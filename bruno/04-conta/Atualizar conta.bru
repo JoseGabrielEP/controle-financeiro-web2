@@ -1,0 +1,41 @@
+meta {
+  name: Atualizar conta
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/conta/{{contaId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuario_id": {{usuarioId}},
+    "nome": "Conta corrente",
+    "saldo_inicial": 300.5
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.changes: eq 1
+}
+
+tests {
+  test("altera uma linha", function () {
+    expect(res.getBody().changes).to.equal(1);
+  });
+}
+
+docs {
+  # PUT /conta/:id
+
+  Atualiza todas os campos. Exige o objeto completo.
+
+  **Respostas**
+
+  - `200` `{ changes, lastInsertRowid }`
+  - `400` corpo ou id inválido
+}

@@ -1,0 +1,38 @@
+meta {
+  name: Criar conta inválida
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/conta
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "usuario_id": {{usuarioId}},
+    "nome": "Sem saldo"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("rejeita corpo inválido com 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
+
+docs {
+  # POST /conta (inválido)
+
+  Teste negativo: falta `saldo_inicial`.
+
+  **Respostas**
+
+  - `400` resumo dos erros do ArkType
+}

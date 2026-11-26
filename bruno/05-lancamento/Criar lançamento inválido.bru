@@ -1,0 +1,42 @@
+meta {
+  name: Criar lançamento inválido
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/lancamento
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "conta_id": {{contaId}},
+    "categoria_id": {{categoriaId}},
+    "descricao": "Tipo errado",
+    "valor": 10,
+    "tipo": "transferencia",
+    "data": "2026-11-26"
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("rejeita corpo inválido com 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
+
+docs {
+  # POST /lancamento (inválido)
+
+  Teste negativo: `tipo` só aceita `entrada` ou `saida`.
+
+  **Respostas**
+
+  - `400` resumo dos erros do ArkType
+}

@@ -1,0 +1,16 @@
+docs {
+  # Controle Financeiro API
+
+  Coleção de testes do trabalho de Web 2 (Bun + Hono + SQLite).
+
+  **Como rodar:** suba o servidor com `bun run index.ts`, escolha o ambiente **local** e use **Run Collection**. As pastas rodam em ordem e cada uma depende das anteriores:
+
+  1. Usuário: cria o usuário usado no login
+  2. Auth: faz login e guarda o cookie `ses`
+  3. Categoria
+  4. Conta: usa o `usuarioId`
+  5. Lançamento: usa `contaId` e `categoriaId`
+  6. Limpeza: apaga tudo o que foi criado, na ordem inversa
+
+  Os ids criados ficam em variáveis de runtime (`usuarioId`, `categoriaId`, `contaId`, `lancamentoId`).
+}

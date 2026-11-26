@@ -1,0 +1,33 @@
+meta {
+  name: Obter usuário
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/usuario/{{usuarioId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq {{usuarioId}}
+}
+
+tests {
+  test("devolve o e-mail cadastrado", function () {
+    expect(res.getBody().email).to.equal(bru.getVar("email"));
+  });
+}
+
+docs {
+  # GET /usuario/:id
+
+  Busca um usuário pelo id.
+
+  **Respostas**
+
+  - `200` o usuário
+  - `200` com `null` quando o id não existe (não responde 404)
+}

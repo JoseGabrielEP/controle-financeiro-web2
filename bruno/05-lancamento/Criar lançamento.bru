@@ -1,0 +1,61 @@
+meta {
+  name: Criar lançamento
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/lancamento
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "conta_id": {{contaId}},
+    "categoria_id": {{categoriaId}},
+    "descricao": "Compra no mercado",
+    "valor": 87.4,
+    "tipo": "saida",
+    "data": "2026-11-26"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.changes: eq 1
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setVar("lancamentoId", res.getBody().lastInsertRowid);
+  }
+}
+
+tests {
+  test("devolve o id criado", function () {
+    expect(res.getBody().lastInsertRowid).to.be.a("number");
+  });
+}
+
+docs {
+  # POST /lancamento
+
+  Cria um lançamento usando a conta (pasta 04) e a categoria (pasta 03) criadas antes.
+
+  **Corpo** (todos obrigatórios)
+
+  | Campo | Tipo |
+  |---|---|
+  | `conta_id` | number |
+  | `categoria_id` | number |
+  | `descricao` | string |
+  | `valor` | number |
+  | `tipo` | `'entrada'` \| `'saida'` |
+  | `data` | string (ex.: `2026-11-26`) |
+
+  **Respostas**
+
+  - `200` `{ changes, lastInsertRowid }`
+  - `400` corpo inválido (resumo do ArkType)
+}

@@ -1,0 +1,37 @@
+meta {
+  name: Criar categoria inválida
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/categoria
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": 123
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+tests {
+  test("rejeita corpo inválido com 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+}
+
+docs {
+  # POST /categoria (inválido)
+
+  Teste negativo: `nome` precisa ser texto.
+
+  **Respostas**
+
+  - `400` resumo dos erros do ArkType
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Obter lançamento
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/lancamento/{{lancamentoId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq {{lancamentoId}}
+}
+
+docs {
+  # GET /lancamento/:id
+
+  Busca um lançamento pelo id.
+
+  **Respostas**
+
+  - `200` o lançamento
+  - `200` com `null` quando o id não existe (não responde 404)
+}

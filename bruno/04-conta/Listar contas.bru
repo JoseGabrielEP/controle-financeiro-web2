@@ -1,0 +1,32 @@
+meta {
+  name: Listar contas
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/conta
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("a lista contém o registro criado", function () {
+    const ids = res.getBody().map(x => x.id);
+    expect(ids).to.include(bru.getVar("contaId"));
+  });
+}
+
+docs {
+  # GET /conta
+
+  Lista todas as contas.
+
+  **Respostas**
+
+  - `200` lista
+}

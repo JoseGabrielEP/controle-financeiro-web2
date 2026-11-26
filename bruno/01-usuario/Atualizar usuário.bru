@@ -1,0 +1,44 @@
+meta {
+  name: Atualizar usuário
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/usuario/{{usuarioId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Usuário Bruno Editado",
+    "idade": 22,
+    "email": "{{email}}",
+    "password": "{{senha}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.changes: eq 1
+}
+
+tests {
+  test("altera uma linha", function () {
+    expect(res.getBody().changes).to.equal(1);
+  });
+}
+
+docs {
+  # PUT /usuario/:id
+
+  Atualiza `nome`, `idade` e `email`. Exige o objeto completo.
+
+  **Atenção:** `password` é obrigatório na validação, mas não altera a senha.
+
+  **Respostas**
+
+  - `200` `{ changes, lastInsertRowid }`
+  - `400` corpo ou id inválido
+}

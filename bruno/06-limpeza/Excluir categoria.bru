@@ -1,0 +1,32 @@
+meta {
+  name: Excluir categoria
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/categoria/{{categoriaId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 204
+}
+
+tests {
+  test("responde 204", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}
+
+docs {
+  # DELETE /categoria/:id
+
+  Remove o registro criado nos passos anteriores.
+
+  **Respostas**
+
+  - `204` removido
+  - `404` `"Not found"` quando o id não existe
+}

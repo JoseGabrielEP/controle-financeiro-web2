@@ -1,0 +1,27 @@
+meta {
+  name: Obter categoria
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/categoria/{{categoriaId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq {{categoriaId}}
+}
+
+docs {
+  # GET /categoria/:id
+
+  Busca uma categoria pelo id.
+
+  **Respostas**
+
+  - `200` a categoria
+  - `200` com `null` quando o id não existe (não responde 404)
+}
